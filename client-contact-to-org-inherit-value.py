@@ -11,31 +11,28 @@ headers = {"BhRestToken":BhRestToken}
 # Find all client contacts with "Salesforce App Cloud" as a Skill
 def get_client_contacts_with_field_value():
     start = 0
-    url = f"{rest_url}/query/ClientContact?fields=id,clientCorporation,skills&sort=-id&where=skills.name='Salesforce App Cloud'&count=200&start={str(start)}"
-    headers = {"BhRestToken":BhRestToken}
+    url = f"{rest_url}/query/ClientContact?fields=id,clientCorporation,skills&sort=-id&where=skills.name='Sales Cloud'&count=200&start={str(start)}"
     response = requests.request("GET", url, headers=headers).json()
     num_of_results = len(response['data'])
 
     while num_of_results > 199:
-        url = f"{rest_url}/query/ClientContact?fields=id,clientCorporation,skills&sort=-id&where=skills.name='Salesforce App Cloud'&count=200&start={str(start)}"
         response = requests.request("GET", url, headers=headers).json()
         start += 200
         num_of_results = len(response['data'])
         for dm in response['data']:
             print(dm['id'])
             bhid = str(dm['clientCorporation']['id'])
-            add_org_cloud(bhid,"Salesforce App Cloud")
+            add_org_cloud(bhid,"Salesforce Sales Cloud")
     else:
-        url = f"{rest_url}/query/ClientContact?fields=id,clientCorporation,skills&sort=-id&where=skills.name='Salesforce App Cloud'&count=200&start={str(start)}"
         response = requests.request("GET", url, headers=headers).json()
         num_of_results = len(response['data'])
         for dm in response['data']:
             print(dm['id'])
             bhid = str(dm['clientCorporation']['id'])
-            add_org_cloud(bhid,"Salesforce App Cloud")
+            add_org_cloud(bhid,"Salesforce Sales Cloud")
         return
-            
-# Add new value ("Salesforce App Cloud") to "customTextBlock3" field on client contact's org
+
+# Add new value ("Salesforce Sales Cloud") to "customTextBlock3" field on client contact's org
 def add_org_cloud(bhid, new_cloud):
     url = f"{rest_url}/entity/ClientCorporation/{bhid}?fields=id,customTextBlock3" #customTextBlock3 is new field to write into
     data = requests.request("GET", url, headers=headers).json()
